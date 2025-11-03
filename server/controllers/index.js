@@ -283,6 +283,55 @@ const notFound = (req, res) => {
   });
 };
 
+
+
+//Dog stuff 
+// Function to create a new dog in the database
+const setNameDog = async (req, res) => {
+  if (!req.body.name || !req.body.breed || !req.body.age) {
+    // If they are missing data, send back an error.
+    return res.status(400).json({ error: 'name, breed and age are all required' });
+  }
+
+  /* If they did send all the data, we want to create a cat and add it to our database.
+     We begin by creating a cat that matches the format of our Cat schema. In this case,
+     we define a name and bedsOwned. We don't need to define the createdDate, because the
+     default Date.now function will populate that value for us later.
+  */
+  const dogData = {
+    Name: `${req.body.name}`,Breed:`${req.body.breed}`,
+    Age: `${req.body.age}`,
+  }
+  };
+
+  //function to loopup dog and age it by 1 
+  const searchNameDog = async (req, res) => {
+    if (!req.query.name) {
+      return res.status(400).json({ error: 'Name is required to perform a search' });
+    }
+  
+    let doc;
+    try {
+
+      doc = await Dog.findOne({ name: req.query.name }).exec();
+    } catch (err) {
+      // If there is an error, log it and send the user an error message.
+      console.log(err);
+      return res.status(500).json({ error: 'Something went wrong' });
+    }
+  
+    // If we do not find something that matches our search, doc will be empty.
+    if (!doc) {
+      return res.status(404).json({ error: 'No dog found' });
+    }
+  
+    // Otherwise, we got a result and will send it back to the user.
+    //age dog by 1
+    doc.age += 1;
+    await doc.save();
+    return res.json({ name: doc.name, age: doc.age, breed: doc.breed });
+  };
+
 // export the relevant public controller functions
 module.exports = {
   index: hostIndex,
@@ -294,4 +343,6 @@ module.exports = {
   updateLast,
   searchName,
   notFound,
+  setNameDog,
+  searchNameDog,
 };
