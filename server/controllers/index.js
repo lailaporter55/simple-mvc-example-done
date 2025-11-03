@@ -319,8 +319,7 @@ const setNameDog = async (req, res) => {
       console.log(err);
       return res.status(500).json({ error: 'Something went wrong' });
     }
-  
-    // If we do not find something that matches our search, doc will be empty.
+      // If we do not find something that matches our search, doc will be empty.
     if (!doc) {
       return res.status(404).json({ error: 'No dog found' });
     }
@@ -331,6 +330,8 @@ const setNameDog = async (req, res) => {
     await doc.save();
     return res.json({ name: doc.name, age: doc.age, breed: doc.breed });
   };
+
+
 
 // export the relevant public controller functions
 module.exports = {
